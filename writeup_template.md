@@ -38,6 +38,12 @@ I used numpy to randomly plot some images in the training set along with their l
 
 <img src="examples/trainingSet_overview.png" alt="Training set" width="500" height="300"/>
 
+Later, simple statistic method was apllied to see whether the the training set is balanced or not, and the result is shown as follows:
+
+</br>
+
+<img src="examples/barchart.png" alt="Training set" width="300" height="200"/>
+
 ### Design and Test a Model Architecture
 
 #### 1. Describe how you preprocessed the image data. What techniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, and provide example images of the additional data. Then describe the characteristics of the augmented training set like number of images in the set, number of images for each class, etc.)
@@ -53,8 +59,14 @@ Here is an example of a traffic sign image after grayscaling.
 
 <img src="examples/gray_train.png" alt="Gray scale Training set" width="500" height="300"/>
 
+Later I found that if I keep gray information in 3 channels, the normalization result is not good for training. Thus I simply converted the image to gray scale with only one channel left and then
+do the normalization. By doing this, the training procedure could somehow overcome the overfitting problem. Also, in practice, the training accuracy got increased with these preprocessed images.
 
-Later I tried to normalize the images by subtracting the average and then divide by deviation, but the training process did not work well on it as the accuracy got decresed.
+The normalized images looks like:
+
+</br>
+
+<img src="examples/gray_norm.png" alt="Gray scale Training set" width="500" height="300"/>
 
 
 
@@ -64,7 +76,7 @@ My final model consisted of the following layers:
 
 | Layer         		|     Description	        					| 
 |:---------------------:|:---------------------------------------------:| 
-| Input         		| 32x32x3 RGB image   							| 
+| Input         		| 32x32x1 RGB image   							|
 | Convolution 5x5     	| 1x1 stride, same padding, outputs 28x28x12    |
 | RELU					|												|
 | Max pooling	      	| 2x2 stride,  outputs 12x12x25 				|
@@ -74,7 +86,10 @@ My final model consisted of the following layers:
 | Fully connected		| 625 to 300        			    			|
 | Fully connected		| 300 to 150									|
 | Fully connected		| 150 to 43										|
+| Dropout               |                                               |
 | Softmax				| tf.nn.softmax(logits)							|
+
+At the end of each epoch, I added one dropout layer (keep_prob = 0.5) to against overfitting. This layer highly increased the accuracy of both training set and validation set.
  
 
 
@@ -85,9 +100,9 @@ To train the model, I used an 30 epoches, a batch size of 128, and the learning 
 #### 4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
 My final model results were:
-* training set accuracy of 99.2%
-* validation set accuracy of 91.5%
-* test set accuracy of 91.1%
+* training set accuracy of 99.6%
+* validation set accuracy of 93.3%
+* test set accuracy of 91.5%
 
 If an iterative approach was chosen:
 * What was the first architecture that was tried and why was it chosen?
